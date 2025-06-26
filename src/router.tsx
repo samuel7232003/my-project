@@ -1,16 +1,23 @@
 import path from "path";
-import Login from "./Login";
-import Main from "./Main";
+import Login from "./page/login/Login";
+import Home from "./Home";
 import { create } from "domain";
 import { createBrowserRouter } from "react-router-dom";
+import Main from "./page/main/Main";
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Login />,
-    },
-    {
-        path: "/main",
-        element: <Main />,
+        element: <Home />,
+        children: [
+            {
+                path: "",
+                element: <Main />,
+            },
+            {
+                path: "login",
+                element: <Login />,
+            }
+        ]
     },
 ])

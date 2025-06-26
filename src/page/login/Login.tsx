@@ -3,7 +3,7 @@ import css from './Login.module.css';
 import { Input, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { account } from './data'; // Assuming account is an array of user objects
+import { account } from '../../data'; // Assuming account is an array of user objects
 
 export default function Login() {
     const [userName, setUserName] = useState('');
@@ -16,6 +16,13 @@ export default function Login() {
             setError('Please enter both username and password');
             return;
         }
+
+        const hasSpace = userName.includes(' ');
+        if (hasSpace) {
+            setError('Username cannot contain spaces');
+            return;
+        }
+
         const isValidUserName = account.find(
             (user) => (user.username === userName)
         );
@@ -30,7 +37,8 @@ export default function Login() {
                 setError('Invalid password');
             } else {
                 setError('');
-                navigate('/main');
+                localStorage.setItem('loggedInUser', JSON.stringify(isValidUserName));
+                navigate('/');
             }
         }
     }

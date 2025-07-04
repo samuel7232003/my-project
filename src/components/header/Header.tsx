@@ -2,22 +2,20 @@ import css from "./Header.module.css";
 import { Button } from "antd";
 import React, { use, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useUser } from "../../context/user-context"; // Importing the user context to manage user state
 
 export default function Header() {
-  const [user, setUser] = useState<string | null>(null);
+  const { state, dispatch } = useUser(); // Using the user context to get and set user state
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const location = useLocation();
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem("loggedInUser");
-    if (loggedInUser) {
+    if (state.user) {
       setIsLoggedIn(true);
-      setUser("Hello " + JSON.parse(loggedInUser).name);
     } else {
-      setUser("");
+      setIsLoggedIn(false);
     }
-  }, [location]);
+  }, [state]);
 
   const handleLoginPageClick = () => {
     navigate("login");
@@ -28,10 +26,9 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
-    setUser("");
+    dispatch({ type: "LOGOUT" });
     setIsLoggedIn(false);
-    navigate("/");
+    navigate("/login");
   };
 
   return (
@@ -45,9 +42,8 @@ export default function Header() {
         >
           Main Page
         </Button>
-        {/* <Button color="cyan" size="large" variant="text" onClick={handleLoginPageClick}>Login</Button> */}
       </div>
-      <p className={css.headerMid}>{user}</p>
+      <p className={css.headerMid}>{state.user?.name}</p>
       <div className={css.headerRight}>
         {!isLoggedIn ? (
           <Button

@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run dev`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -31,16 +31,108 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Backend API Documentation
+
+### Base URL
+
+```
+http://localhost:4000/api
+```
+
+### Endpoints
+
+#### 1. Get All Users
+
+- **URL:** `/users`
+- **Method:** `GET`
+- **Response:**
+
+```json
+[
+  {
+    "name": "Alice Smith",
+    "role": "admin",
+    "username": "alice",
+    "password": "password123"
+  }
+  // ...
+]
+```
+
+#### 2. Create User
+
+- **URL:** `/users`
+- **Method:** `POST`
+- **Body:**
+
+```json
+{
+  "name": "string",
+  "role": "string",
+  "username": "string",
+  "password": "string"
+}
+```
+
+- **Response:**
+
+```json
+{
+  "name": "string",
+  "role": "string",
+  "username": "string",
+  "password": "string"
+}
+```
+
+#### 3. Login
+
+- **URL:** `/login`
+- **Method:** `POST`
+- **Body:**
+
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+- **Response (Success):**
+
+```json
+{
+  "name": "string",
+  "role": "string",
+  "username": "string"
+}
+```
+
+- **Response (Failure):**
+
+```json
+{
+  "error": "Invalid username or password."
+}
+```
+
+### Notes
+
+- All endpoints are prefixed with `/api`.
+- Data is stored in `data/users.json`.
+- No authentication tokens are used; login returns user info only.
+- To start the backend: `npx ts-node backend/server.ts`

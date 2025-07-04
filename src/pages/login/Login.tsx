@@ -1,17 +1,21 @@
 import React from "react";
 import css from "./Login.module.css";
-import { Input, Button } from "antd";
+import { Input, Button, Divider } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { account } from "../../datas/data"; // Assuming account is an array of user objects
+import { useUser } from "../../context/user-context"; // Importing the user context to manage user state
+import axios from "axios";
 
 export default function Login() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState(""); 
   const [error, setError] = useState("");
+  const { state, dispatch } = useUser(); 
+  const [isSignUp, setIsSignUp] = useState(false); 
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!userName || !password) {
       setError("Please enter both username and password");
       return;
@@ -23,21 +27,47 @@ export default function Login() {
       return;
     }
 
-    const isValidUserName = account.find((user) => user.username === userName);
-    if (!isValidUserName) {
-      setError("Cant find user with this username");
-    } else {
+    try {
+      const response = await axios.post("http://localhost:4000/api/login", {
+        username: userName,
+        password: password,
+      });
+      dispatch({ type: "LOGIN", payload: response.data });
       setError("");
-      const isValidPassword = account.find(
-        (user) => user.password === password && user.username === userName
-      );
-      if (!isValidPassword) {
-        setError("Invalid password");
-      } else {
-        setError("");
-        localStorage.setItem("loggedInUser", JSON.stringify(isValidUserName));
-        navigate("/");
-      }
+      navigate("/");
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.error || "Login failed. Please try again.";
+      setError(errorMessage);
+    }
+  };
+
+  const handleSignUp = async () => {
+    if (!userName || !password || !name) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    const hasSpace = userName.includes(" ");
+    if (hasSpace) {
+      setError("Username cannot contain spaces");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:4000/api/users", {
+        username: userName,
+        password: password,
+        name: name,
+        role: "user",
+      });
+      dispatch({ type: "SIGNUP", payload: response.data });
+      alert("Sign up successful! You can now log in.");
+      setError("");
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.error || "Sign up failed. Please try again.";
+      setError(errorMessage);
     }
   };
 
@@ -51,6 +81,16 @@ export default function Login() {
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
         />
+        {isSignUp && (
+          <div>
+            <p>Your Name</p>
+            <Input
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+        )}
         <p>Password</p>
         <Input.Password
           placeholder="Enter your password"
@@ -58,13 +98,48 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
         {error && <p className={css.error}>{error}</p>}
-        <Button
-          className={css.loginButton}
-          type="primary"
-          onClick={handleLogin}
-        >
-          Login
-        </Button>
+        {isSignUp === false ?(
+          <Button
+            className={css.loginButton}
+            type="primary"
+            onClick={handleLogin}
+          >
+            Login
+          </Button>
+        ) : (
+          <Button
+            className={css.signUpButton}
+            type="primary"
+            onClick={handleSignUp}
+          >
+            Sign Up
+          </Button>
+        )}
+        {isSignUp === false ? (
+          <p className={css.signupText}>
+            Don't have an account?{" "}
+            <span
+              className={css.signupLink}
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+              }}
+            >
+              Sign Up
+            </span>
+          </p>
+        ) : (
+          <p className={css.signupText}>
+            Already have an account?{" "}
+            <span
+              className={css.signupLink}
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+              }}
+            >
+              Login
+            </span>
+          </p>
+        )}
       </div>
     </div>
   );

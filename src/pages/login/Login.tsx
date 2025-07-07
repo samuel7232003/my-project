@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUser } from "../../context/user-context"; // Importing the user context to manage user state
 import axios from "axios";
+import { login, signup } from "../../service/account";
+import { sign } from "crypto";
+
 
 export default function Login() {
   const [userName, setUserName] = useState("");
@@ -13,7 +16,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const { state, dispatch } = useUser(); 
   const [isSignUp, setIsSignUp] = useState(false); 
-  const navigate = useNavigate();
+  const navigate = useNavigate();// Debugging line to check user state
 
   const handleLogin = async () => {
     if (!userName || !password) {
@@ -28,10 +31,7 @@ export default function Login() {
     }
 
     try {
-      const response = await axios.post("http://localhost:4000/api/login", {
-        username: userName,
-        password: password,
-      });
+      const response = await login(userName, password);
       dispatch({ type: "LOGIN", payload: response.data });
       setError("");
       navigate("/");
@@ -55,12 +55,7 @@ export default function Login() {
     }
 
     try {
-      const response = await axios.post("http://localhost:4000/api/users", {
-        username: userName,
-        password: password,
-        name: name,
-        role: "user",
-      });
+      const response = await signup(userName, password, name);
       dispatch({ type: "SIGNUP", payload: response.data });
       alert("Sign up successful! You can now log in.");
       setError("");

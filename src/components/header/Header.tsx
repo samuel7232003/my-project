@@ -1,21 +1,12 @@
 import css from "./Header.module.css";
 import { Button } from "antd";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useUser } from "../../context/user-context"; // Importing the user context to manage user state
+import { useUser } from "../../context/user-context";
 
 export default function Header() {
-  const { state, dispatch } = useUser(); // Using the user context to get and set user state
+  const { state, dispatch } = useUser();
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (state.user) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [state]);
 
   const handleLoginPageClick = () => {
     navigate("login");
@@ -27,7 +18,7 @@ export default function Header() {
 
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
-    setIsLoggedIn(false);
+    console.log(state.isLoggedIn);
     navigate("/login");
   };
 
@@ -45,7 +36,7 @@ export default function Header() {
       </div>
       <p className={css.headerMid}>{state.user?.name}</p>
       <div className={css.headerRight}>
-        {!isLoggedIn ? (
+        {!state.isLoggedIn ? (
           <Button
             color="cyan"
             size="large"

@@ -1,12 +1,13 @@
 import css from "./Header.module.css";
 import { Button } from "antd";
-import React, { use, useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useUser } from "../../context/user-context";
+import { useContext } from "react";
+import { useUserContext } from "../../context/userContext/userContext";
+import { logout } from "../../context/userContext/userAction";
 
 export default function Header() {
-  const { state, dispatch } = useUser();
   const navigate = useNavigate();
+  const { state, dispatch } = useUserContext();
 
   const handleLoginPageClick = () => {
     navigate("login");
@@ -17,8 +18,7 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    dispatch({ type: "LOGOUT" });
-    console.log(state.isLoggedIn);
+    logout(dispatch);
     navigate("/login");
   };
 

@@ -28,5 +28,11 @@
     "role": "user",
     "username": "account",
     "password": "1"
+  },
+  {
+    "name": "huy vui ve",
+    "role": "user",
+    "username": "testvuive",
+    "password": "1"
   }
 ]

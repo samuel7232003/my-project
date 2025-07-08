@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:4000/api";
 
-export const login = async (username: string, password: string) => {
+export const serviceLogin = async (username: string, password: string) => {
     const response = await axios.post(`${BASE_URL}/login`, {
         username,
         password
@@ -10,7 +10,7 @@ export const login = async (username: string, password: string) => {
     return response;
 }
 
-export const signup = async (username: string, password: string, name: string) => {
+export const serviceSignup = async (username: string, password: string, name: string) => {
     const response = await axios.post(`${BASE_URL}/users`, {
         username,
         password,

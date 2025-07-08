@@ -5,16 +5,16 @@ import Login from "./pages/login/Login";
 import reportWebVitals from "./reportWebVitals";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
-import { UserProvider } from "./context/user-context";
+import Provider from "./context/provider";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <UserProvider>
+    <Provider>
       <RouterProvider router={router} />
-    </UserProvider>
+    </Provider>
   </React.StrictMode>
 );
 

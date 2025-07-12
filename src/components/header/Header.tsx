@@ -1,23 +1,13 @@
 import css from "./Header.module.css";
 import { Button } from "antd";
-import React, { use, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { useUserContext } from "../../context/userContext/userContext";
+import { logout } from "../../context/userContext/userAction";
 
 export default function Header() {
-  const [user, setUser] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    const loggedInUser = localStorage.getItem("loggedInUser");
-    if (loggedInUser) {
-      setIsLoggedIn(true);
-      setUser("Hello " + JSON.parse(loggedInUser).name);
-    } else {
-      setUser("");
-    }
-  }, [location]);
+  const { state, dispatch } = useUserContext();
 
   const handleLoginPageClick = () => {
     navigate("login");
@@ -28,10 +18,8 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
-    setUser("");
-    setIsLoggedIn(false);
-    navigate("/");
+    logout(dispatch);
+    navigate("/login");
   };
 
   return (
@@ -45,11 +33,10 @@ export default function Header() {
         >
           Main Page
         </Button>
-        {/* <Button color="cyan" size="large" variant="text" onClick={handleLoginPageClick}>Login</Button> */}
       </div>
-      <p className={css.headerMid}>{user}</p>
+      <p className={css.headerMid}>{state.user?.name}</p>
       <div className={css.headerRight}>
-        {!isLoggedIn ? (
+        {!state.user ? (
           <Button
             color="cyan"
             size="large"

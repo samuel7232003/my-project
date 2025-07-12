@@ -1,43 +1,71 @@
-import React from "react";
 import css from "./Login.module.css";
-import { Input, Button } from "antd";
+import { Input, Button, Divider } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { account } from "../../datas/data"; // Assuming account is an array of user objects
+import { useState, useContext, useEffect } from "react";
+import { useUserContext } from "../../context/userContext/userContext";// Import the login and signup functions
+import { actionLogin, actionSignup } from "../../context/userContext/userAction";
+import { User } from "../../context/userContext/userTypes"; // Import the User type
 
 export default function Login() {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
+  const [user, setUser] = useState<User>({
+    userName: "",
+    password: "",
+    name: "",
+    role: "user",
+  });
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate(); // Debugging line to check user state
+  const { state, dispatch } = useUserContext(); // Use the custom hook to access user context
 
-  const handleLogin = () => {
-    if (!userName || !password) {
+  useEffect(() => {
+  if (state.user) {
+    navigate("/");
+  }
+}, [state.user,]);
+
+  const handleLogin = async () => {
+    if (!user.userName || !user.password) {
       setError("Please enter both username and password");
       return;
     }
 
-    const hasSpace = userName.includes(" ");
+    const hasSpace = user.userName.includes(" ");
     if (hasSpace) {
       setError("Username cannot contain spaces");
       return;
     }
 
-    const isValidUserName = account.find((user) => user.username === userName);
-    if (!isValidUserName) {
-      setError("Cant find user with this username");
-    } else {
+    try {
+      await actionLogin(dispatch, user.userName, user.password);
+      setError(""); // Clear error on successful login
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.error || "Login failed. Please try again.";
+      setError(errorMessage);
+    }
+  };
+
+  const handleSignUp = async () => {
+    if (!user.name || !user.password || !user.userName) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    const hasSpace = user.userName.includes(" ");
+    if (hasSpace) {
+      setError("Username cannot contain spaces");
+      return;
+    }
+
+    try {
+      const response = await actionSignup(dispatch, user.userName, user.password, user.name);
+      alert("Sign up successful! You can now log in.");
       setError("");
-      const isValidPassword = account.find(
-        (user) => user.password === password && user.username === userName
-      );
-      if (!isValidPassword) {
-        setError("Invalid password");
-      } else {
-        setError("");
-        localStorage.setItem("loggedInUser", JSON.stringify(isValidUserName));
-        navigate("/");
-      }
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.error || "Sign up failed. Please try again.";
+      setError(errorMessage);
     }
   };
 
@@ -48,23 +76,68 @@ export default function Login() {
         <p>Email/ Username</p>
         <Input
           placeholder="Enter your email or username"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
+          value={user.userName}
+          onChange={(e) => setUser({ ...user, userName: e.target.value })}
         />
+        {isSignUp && (
+          <div>
+            <p>Your Name</p>
+            <Input
+              placeholder="Enter your name"
+              value={user.name}
+              onChange={(e) => setUser({ ...user, name: e.target.value })}
+            />
+          </div>
+        )}
         <p>Password</p>
         <Input.Password
           placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={user.password}
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
         />
         {error && <p className={css.error}>{error}</p>}
-        <Button
-          className={css.loginButton}
-          type="primary"
-          onClick={handleLogin}
-        >
-          Login
-        </Button>
+        {isSignUp === false ?(
+          <Button
+            className={css.loginButton}
+            type="primary"
+            onClick={handleLogin}
+          >
+            Login
+          </Button>
+        ) : (
+          <Button
+            className={css.signUpButton}
+            type="primary"
+            onClick={handleSignUp}
+          >
+            Sign Up
+          </Button>
+        )}
+        {isSignUp === false ? (
+          <p className={css.signupText}>
+            Don't have an account?{" "}
+            <span
+              className={css.signupLink}
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+              }}
+            >
+              Sign Up
+            </span>
+          </p>
+        ) : (
+          <p className={css.signupText}>
+            Already have an account?{" "}
+            <span
+              className={css.signupLink}
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+              }}
+            >
+              Login
+            </span>
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Alice Smith",
+    "role": "admin",
+    "username": "alice",
+    "password": "password123"
+  },
+  {
+    "name": "Bob Johnson",
+    "role": "user",
+    "username": "bob",
+    "password": "bobpass"
+  },
+  {
+    "name": "Charlie Lee",
+    "role": "user",
+    "username": "charlie",
+    "password": "charliepw"
+  },
+  {
+    "name": "Huy",
+    "role": "user",
+    "username": "chauhuy",
+    "password": "123"
+  }
+]

@@ -19,10 +19,10 @@ export default function Login() {
   const { state, dispatch } = useUserContext(); // Use the custom hook to access user context
 
   useEffect(() => {
-  if (state.isLoggedIn) {
+  if (state.user) {
     navigate("/");
   }
-}, [state.isLoggedIn, navigate]);
+}, [state.user,]);
 
   const handleLogin = async () => {
     if (!user.userName || !user.password) {

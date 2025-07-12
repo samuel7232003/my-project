@@ -4,7 +4,6 @@ import { UserState, UserAction } from "./userTypes";
 
 const initialState: UserState = {
   user: null,
-  isLoggedIn: false,
   error: null,
 };
 
@@ -13,7 +12,7 @@ type ContextType = {
   dispatch: React.Dispatch<UserAction>;
 };
 
-const UserContext = createContext<ContextType | undefined>(undefined);
+export const UserContext = createContext<ContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(userReducer, initialState);

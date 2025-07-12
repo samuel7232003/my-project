@@ -36,7 +36,7 @@ export default function Header() {
       </div>
       <p className={css.headerMid}>{state.user?.name}</p>
       <div className={css.headerRight}>
-        {!state.isLoggedIn ? (
+        {!state.user ? (
           <Button
             color="cyan"
             size="large"

@@ -22,17 +22,5 @@
     "role": "user",
     "username": "chauhuy",
     "password": "123"
-  },
-  {
-    "name": "test account",
-    "role": "user",
-    "username": "account",
-    "password": "1"
-  },
-  {
-    "name": "huy vui ve",
-    "role": "user",
-    "username": "testvuive",
-    "password": "1"
   }
 ]

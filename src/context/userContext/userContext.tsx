@@ -8,16 +8,16 @@ const initialState: UserState = {
 };
 
 type ContextType = {
-  state: UserState;
-  dispatch: React.Dispatch<UserAction>;
+  userState: UserState;
+  userDispatch: React.Dispatch<UserAction>;
 };
 
 export const UserContext = createContext<ContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(userReducer, initialState);
+  const [userState, userDispatch] = useReducer(userReducer, initialState);
   return (
-    <UserContext.Provider value={{ state, dispatch }}>
+    <UserContext.Provider value={{ userState, userDispatch }}>
       {children}
     </UserContext.Provider>
   );

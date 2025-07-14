@@ -2,8 +2,11 @@ import css from "./Login.module.css";
 import { Input, Button, Divider } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect } from "react";
-import { useUserContext } from "../../context/userContext/userContext";// Import the login and signup functions
-import { actionLogin, actionSignup } from "../../context/userContext/userAction";
+import { useUserContext } from "../../context/userContext/userContext"; // Import the login and signup functions
+import {
+  actionLogin,
+  actionSignup,
+} from "../../context/userContext/userAction";
 import { User } from "../../context/userContext/userTypes"; // Import the User type
 
 export default function Login() {
@@ -16,13 +19,13 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate(); // Debugging line to check user state
-  const { state, dispatch } = useUserContext(); // Use the custom hook to access user context
+  const { userState, userDispatch } = useUserContext(); // Use the custom hook to access user context
 
   useEffect(() => {
-  if (state.user) {
-    navigate("/");
-  }
-}, [state.user,]);
+    if (userState.user) {
+      navigate("/");
+    }
+  }, [userState.user, navigate]);
 
   const handleLogin = async () => {
     if (!user.userName || !user.password) {
@@ -35,15 +38,8 @@ export default function Login() {
       setError("Username cannot contain spaces");
       return;
     }
-
-    try {
-      await actionLogin(dispatch, user.userName, user.password);
-      setError(""); // Clear error on successful login
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.error || "Login failed. Please try again.";
-      setError(errorMessage);
-    }
+      await actionLogin(userDispatch, user.userName, user.password);
+      setError(userState.error ?? ""); // Clear error on successful login
   };
 
   const handleSignUp = async () => {
@@ -57,16 +53,14 @@ export default function Login() {
       setError("Username cannot contain spaces");
       return;
     }
-
-    try {
-      const response = await actionSignup(dispatch, user.userName, user.password, user.name);
+      const response = await actionSignup(
+        userDispatch,
+        user.userName,
+        user.password,
+        user.name
+      );
       alert("Sign up successful! You can now log in.");
-      setError("");
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.error || "Sign up failed. Please try again.";
-      setError(errorMessage);
-    }
+      setError(userState.error ?? ""); // Clear error on successful signup
   };
 
   return (
@@ -96,7 +90,7 @@ export default function Login() {
           onChange={(e) => setUser({ ...user, password: e.target.value })}
         />
         {error && <p className={css.error}>{error}</p>}
-        {isSignUp === false ?(
+        {isSignUp === false ? (
           <Button
             className={css.loginButton}
             type="primary"

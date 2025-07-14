@@ -7,7 +7,7 @@ import { logout } from "../../context/userContext/userAction";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { state, dispatch } = useUserContext();
+  const { userState, userDispatch } = useUserContext();
 
   const handleLoginPageClick = () => {
     navigate("login");
@@ -18,7 +18,7 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    logout(dispatch);
+    logout(userDispatch);
     navigate("/login");
   };
 
@@ -34,9 +34,9 @@ export default function Header() {
           Main Page
         </Button>
       </div>
-      <p className={css.headerMid}>{state.user?.name}</p>
+      <p className={css.headerMid}>{userState.user?.name}</p>
       <div className={css.headerRight}>
-        {!state.user ? (
+        {!userState.user ? (
           <Button
             color="cyan"
             size="large"

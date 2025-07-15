@@ -12,9 +12,9 @@ export function ProductDetail() {
   const { id } = useParams();
 
   const fetchProduct = async () => {
-      if (!id) return;
-      await getProductById(productDispatch, parseInt(id));
-    };
+    if (!id) return;
+    await getProductById(productDispatch, parseInt(id));
+  };
 
   useEffect(() => {
     fetchProduct();
@@ -37,41 +37,49 @@ export function ProductDetail() {
   return (
     <div className={css.productDetailContainer}>
       <h2 className={css.productTitle}>{productState.product?.title}</h2>
-      <div className={css.productContent}>
-        <div className={css.productLeft}>
-          <figure className={css.productImage}>
-            <img
-              src={productState.product?.image}
-              alt={productState.product?.title}
-            />
-          </figure>
-          <p className={css.productPrice}>
-            Price: {productState.product?.price}$
-          </p>
-          <p className={css.productCategory}>
-            Category: {productState.product?.category}
-          </p>
-        </div>
-        <div className={css.productRight}>
-          <p className={css.productDescription}>
-            {productState.product?.description}
-          </p>
-          <div className={css.productActionsContainer}>
-            <div className={css.productActions}>
-              <Button type="default" onClick={handleDecrement}>
-                -
-              </Button>
-              <span>{quantity}</span>
-              <Button type="default" onClick={handleIncrement}>
-                +
+      {productState.loading === true ? (
+        <p>Loading...</p>
+      ) : (
+        <div className={css.productContent}>
+          <div className={css.productLeft}>
+            <figure className={css.productImage}>
+              <img
+                src={productState.product?.image}
+                alt={productState.product?.title}
+              />
+            </figure>
+            <p className={css.productPrice}>
+              Price: {productState.product?.price}$
+            </p>
+            <p className={css.productCategory}>
+              Category: {productState.product?.category}
+            </p>
+          </div>
+          <div className={css.productRight}>
+            <p className={css.productDescription}>
+              {productState.product?.description}
+            </p>
+            <div className={css.productActionsContainer}>
+              <div className={css.productActions}>
+                <Button type="default" onClick={handleDecrement}>
+                  -
+                </Button>
+                <span>{quantity}</span>
+                <Button type="default" onClick={handleIncrement}>
+                  +
+                </Button>
+              </div>
+              <Button
+                color="danger"
+                variant="solid"
+                className={css.addToCartButton}
+              >
+                Add to Cart ${cost.toFixed(2)}
               </Button>
             </div>
-            <Button color="danger" variant="solid" className={css.addToCartButton}>
-              Add to Cart ${cost.toFixed(2)}
-            </Button>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -2,11 +2,23 @@ import React, { use, useEffect, useState } from "react";
 import { useProductContext } from "../../context/productContext/productContext";
 import css from "./productDetail.module.css";
 import { Button } from "antd";
+import { useParams } from "react-router";
+import { getProductById } from "../../context/productContext/productAction";
 
 export function ProductDetail() {
-  const { productState } = useProductContext();
+  const { productState, productDispatch } = useProductContext();
   const [quantity, setQuantity] = useState(1);
   const [cost, setCost] = useState(productState.product?.price || 0);
+  const { id } = useParams();
+
+  const fetchProduct = async () => {
+      if (!id) return;
+      await getProductById(productDispatch, parseInt(id));
+    };
+
+  useEffect(() => {
+    fetchProduct();
+  }, [id, productDispatch]);
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1);
@@ -55,7 +67,7 @@ export function ProductDetail() {
               </Button>
             </div>
             <Button color="danger" variant="solid" className={css.addToCartButton}>
-              Add to Cart ${cost}
+              Add to Cart ${cost.toFixed(2)}
             </Button>
           </div>
         </div>

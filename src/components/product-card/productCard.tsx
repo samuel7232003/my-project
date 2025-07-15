@@ -3,14 +3,10 @@ import css from "./productCard.module.css";
 import { Product } from "../../context/productContext/productTypes";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
-import { getProductById } from "../../context/productContext/productAction";
-import { useProductContext } from "../../context/productContext/productContext";
 
 export function ProductCard(product: Product) {
   const navigate = useNavigate();
-  const { productState, productDispatch } = useProductContext();
   const handleViewDetails = () => {
-    getProductById(productDispatch, product.id);
     navigate(`/products/${product.id}`);
   };
   return (

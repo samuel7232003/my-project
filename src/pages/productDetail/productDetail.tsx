@@ -41,47 +41,37 @@ export function ProductDetail() {
   return (
     <div className={css.productDetailContainer}>
       <h2 className={css.productTitle}>{product?.title}</h2>
-      (
-        <div className={css.productContent}>
-          <div className={css.productLeft}>
-            <figure className={css.productImage}>
-              <img
-                src={product?.image}
-                alt={product?.title}
-              />
-            </figure>
-            <p className={css.productPrice}>
-              Price: {product?.price}$
-            </p>
-            <p className={css.productCategory}>
-              Category: {product?.category}
-            </p>
-          </div>
-          <div className={css.productRight}>
-            <p className={css.productDescription}>
-              {product?.description}
-            </p>
-            <div className={css.productActionsContainer}>
-              <div className={css.productActions}>
-                <Button type="default" onClick={handleDecrement}>
-                  -
-                </Button>
-                <span>{quantity}</span>
-                <Button type="default" onClick={handleIncrement}>
-                  +
-                </Button>
-              </div>
-              <Button
-                color="danger"
-                variant="solid"
-                className={css.addToCartButton}
-              >
-                Add to Cart ${cost.toFixed(2)}
+
+      <div className={css.productContent}>
+        <div className={css.productLeft}>
+          <figure className={css.productImage}>
+            <img src={product?.image} alt={product?.title} />
+          </figure>
+          <p className={css.productPrice}>Price: {product?.price}$</p>
+          <p className={css.productCategory}>Category: {product?.category}</p>
+        </div>
+        <div className={css.productRight}>
+          <p className={css.productDescription}>{product?.description}</p>
+          <div className={css.productActionsContainer}>
+            <div className={css.productActions}>
+              <Button type="default" onClick={handleDecrement}>
+                -
+              </Button>
+              <span>{quantity}</span>
+              <Button type="default" onClick={handleIncrement}>
+                +
               </Button>
             </div>
+            <Button
+              color="danger"
+              variant="solid"
+              className={css.addToCartButton}
+            >
+              Add to Cart ${cost.toFixed(2)}
+            </Button>
           </div>
         </div>
-      )
+      </div>
     </div>
   );
 }

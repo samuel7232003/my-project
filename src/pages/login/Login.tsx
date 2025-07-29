@@ -56,14 +56,9 @@ export default function Login() {
     }
 
     const response = await serviceSignup(inforUser.userName, inforUser.password, inforUser.name);
-    if (response.status !== 200) {
-      setError("Username already exists");
-      return;
-    }
-    if (response.status === 200) {
-      dispatch(actionSetUser(inforUser));
-      navigate("/");
-    }
+    dispatch(actionSetUser(response.data));
+    alert("Sign up successful! You will be logged in.");
+    navigate("/");
   };
 
   return (

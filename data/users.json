@@ -22,5 +22,11 @@
     "role": "user",
     "username": "chauhuy",
     "password": "123"
+  },
+  {
+    "name": "zzz",
+    "role": "user",
+    "username": "zzz",
+    "password": "zzz"
   }
 ]

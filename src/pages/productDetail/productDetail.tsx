@@ -1,24 +1,28 @@
 import React, { use, useEffect, useState } from "react";
-import { useProductContext } from "../../context/productContext/productContext";
 import css from "./productDetail.module.css";
 import { Button } from "antd";
 import { useParams } from "react-router";
 import { getProductById } from "../../context/productContext/productAction";
+import { useAppSelector, useAppDispatch } from "../../redux/builder";
+import useApp from "antd/es/app/useApp";
+import { actionGetProductById } from "../../redux/product/product.action";
 
 export function ProductDetail() {
-  const { productState, productDispatch } = useProductContext();
+  const product = useAppSelector((state) => state.product.product);
+  const dispatch = useAppDispatch();
+
   const [quantity, setQuantity] = useState(1);
-  const [cost, setCost] = useState(productState.product?.price || 0);
+  const [cost, setCost] = useState(product?.price || 0);
   const { id } = useParams();
 
   const fetchProduct = async () => {
     if (!id) return;
-    await getProductById(productDispatch, parseInt(id));
+    dispatch(actionGetProductById(parseInt(id)));
   };
 
   useEffect(() => {
     fetchProduct();
-  }, [id, productDispatch]);
+  }, [id, dispatch]);
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1);
@@ -29,35 +33,33 @@ export function ProductDetail() {
   };
 
   useEffect(() => {
-    if (productState.product) {
-      setCost(productState.product.price * quantity);
+    if (product) {
+      setCost(product.price * quantity);
     }
-  }, [quantity, productState.product?.price]);
+  }, [quantity, product?.price]);
 
   return (
     <div className={css.productDetailContainer}>
-      <h2 className={css.productTitle}>{productState.product?.title}</h2>
-      {productState.loading === true ? (
-        <p>Loading...</p>
-      ) : (
+      <h2 className={css.productTitle}>{product?.title}</h2>
+      (
         <div className={css.productContent}>
           <div className={css.productLeft}>
             <figure className={css.productImage}>
               <img
-                src={productState.product?.image}
-                alt={productState.product?.title}
+                src={product?.image}
+                alt={product?.title}
               />
             </figure>
             <p className={css.productPrice}>
-              Price: {productState.product?.price}$
+              Price: {product?.price}$
             </p>
             <p className={css.productCategory}>
-              Category: {productState.product?.category}
+              Category: {product?.category}
             </p>
           </div>
           <div className={css.productRight}>
             <p className={css.productDescription}>
-              {productState.product?.description}
+              {product?.description}
             </p>
             <div className={css.productActionsContainer}>
               <div className={css.productActions}>
@@ -79,7 +81,7 @@ export function ProductDetail() {
             </div>
           </div>
         </div>
-      )}
+      )
     </div>
   );
 }

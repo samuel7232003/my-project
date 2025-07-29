@@ -1,26 +1,26 @@
-import { get } from "http";
 import React, { useEffect } from "react";
 import css from "./Main.module.css";
-import { useProductContext } from "../../context/productContext/productContext";
-import { getAllProducts } from "../../context/productContext/productAction";
 import { ProductCard } from "../../components/product-card/productCard";
+import { useAppDispatch, useAppSelector } from "../../redux/builder";
+import { serviceGetAllProducts } from "../../service/product";
+import { actionGetAllProducts } from "../../redux/product/product.action";
 
 export default function Main() {
-  const { productState, productDispatch } = useProductContext();
+  const products = useAppSelector((state) => state.product.products);
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    getAllProducts(productDispatch);
+    dispatch(actionGetAllProducts());
   }, []);
 
   return (
     <div className={css.mainContainer}>
       <h1>Product List</h1>
-      {productState.loading === true ? <p>Loading...</p> : <div className={css.productList}>
-        {productState.listProducts.map((product) => (
+      <div className={css.productList}>
+        {products.map((product) => (
           <ProductCard key={product.id} {...product} />
         ))}
-      </div>}
-      {productState.error && <p>Error: {productState.error}</p>}
-      
+      </div>
     </div>
   );
 }

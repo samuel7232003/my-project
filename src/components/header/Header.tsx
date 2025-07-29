@@ -1,13 +1,16 @@
 import css from "./Header.module.css";
 import { Button } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useContext } from "react";
-import { useUserContext } from "../../context/userContext/userContext";
 import { logout } from "../../context/userContext/userAction";
+import { useAppSelector, useAppDispatch } from "../../redux/builder";
+import { actionClearUser } from "../../redux/user/user.action";
+import { use, useEffect } from "react";
 
 export default function Header() {
+  const user = useAppSelector((state) => state.user.user);
+  const dispatch = useAppDispatch();
+
   const navigate = useNavigate();
-  const { state, dispatch } = useUserContext();
 
   const handleLoginPageClick = () => {
     navigate("login");
@@ -18,7 +21,7 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    logout(dispatch);
+    dispatch(actionClearUser());
     navigate("/login");
   };
 
@@ -34,9 +37,9 @@ export default function Header() {
           Main Page
         </Button>
       </div>
-      <p className={css.headerMid}>{state.user?.name}</p>
+      <p className={css.headerMid}>{user?.name}</p>
       <div className={css.headerRight}>
-        {!state.user ? (
+        {user.userName === "" ? (
           <Button
             color="cyan"
             size="large"

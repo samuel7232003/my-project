@@ -1,4 +1,3 @@
-import React from "react";
 import css from "./productCard.module.css";
 import { Product } from "../../context/productContext/productTypes";
 import { Button } from "antd";

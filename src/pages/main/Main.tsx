@@ -5,33 +5,49 @@ import { useAppDispatch, useAppSelector } from "../../redux/builder";
 import { actionGetAllProducts } from "../../redux/product/product.action";
 import { Button, Input } from "antd";
 import PriceRangeSlider from "../../components/dual-range-slider/price-range-slider";
+import { useSearchParams } from "react-router-dom";
 
 interface FilterState {
   category: string;
   minPrice: number;
   maxPrice: number;
-};
+}
 
 export default function Main() {
   const products = useAppSelector((state) => state.product.products);
   const dispatch = useAppDispatch();
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSearch = searchParams.get("search") || "";
+  const initialCategory = searchParams.get("category") || "";
+  const initialMin = Number(searchParams.get("minPrice") || 0);
+  const initialMax = Number(searchParams.get("maxPrice") || 100);
+
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [filters, setFilters] = useState<FilterState>({
-    category: "",
-    minPrice: 0,
-    maxPrice: 100,
+    category: initialCategory,
+    minPrice: initialMin,
+    maxPrice: initialMax,
   });
 
   const [tempFilters, setTempFilters] = useState<FilterState>({
-    category: "",
-    minPrice: 0,
-    maxPrice: 100,
+    category: initialCategory,
+    minPrice: initialMin,
+    maxPrice: initialMax,
   });
 
   useEffect(() => {
     dispatch(actionGetAllProducts());
   }, []);
+
+  useEffect(() => {
+    const params: any = {};
+    if (searchTerm) params.search = searchTerm;
+    if (filters.category) params.category = filters.category;
+    if (filters.minPrice !== 0) params.minPrice = filters.minPrice.toString();
+    if (filters.maxPrice !== 100) params.maxPrice = filters.maxPrice.toString();
+    setSearchParams(params);
+  }, [searchTerm, filters, setSearchParams]);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -41,10 +57,20 @@ export default function Main() {
     setFilters({ ...tempFilters });
   };
 
+  const handleTemporaryFiltersCost = (min: number, max: number) => {
+    setTempFilters({ ...tempFilters, minPrice: min, maxPrice: max });
+  };
+
+  const handleTemporaryFilterCategory = (category: string) => {
+    setTempFilters({ ...tempFilters, category });
+  };
+
   const handleClearFilters = () => {
     const defaultFilters = { category: "", minPrice: 0, maxPrice: 100 };
+    setSearchTerm("");
     setTempFilters(defaultFilters);
     setFilters(defaultFilters);
+    setSearchParams({});
   };
 
   const filteredProducts = useMemo(() => {
@@ -71,6 +97,7 @@ export default function Main() {
         <Input
           className={css.searchInput}
           placeholder="Search products"
+          value={searchTerm}
           onChange={handleSearchChange}
         />
         <div className={css.filterContainer}>
@@ -79,7 +106,7 @@ export default function Main() {
               className={css.categorySelect}
               name="category"
               value={tempFilters.category}
-              onChange={(e) => setTempFilters((prev) => ({...prev, category: e.target.value,}))}
+              onChange={(e) => handleTemporaryFilterCategory(e.target.value)}
             >
               <option value="">All Categories</option>
               <option value="jewelery">Jewelery</option>
@@ -91,7 +118,7 @@ export default function Main() {
             <PriceRangeSlider
               min={0}
               max={100}
-              onChange={(min, max) => setTempFilters((prev) => ({...prev, minPrice: min, maxPrice: max}))}
+              onChange={(min, max) => handleTemporaryFiltersCost(min, max)}
             />
           </div>
           <div className={css.filterButtons}>

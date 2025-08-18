@@ -1,7 +1,7 @@
 import css from "./Login.module.css";
 import { Input, Button } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "../../context/userContext/userTypes"; // Import the User type
 import { serviceLogin, serviceSignup } from "../../service/account";
 import { actionSetUser } from "../../redux/user/user.action";

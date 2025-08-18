@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export function ProductCard(product: Product) {
   const navigate = useNavigate();
   const handleViewDetails = () => {
-    navigate(`/products/${product.id}`);
+    navigate(`products/${product.id}`);
   };
   return (
     <div className={css.productCard}>

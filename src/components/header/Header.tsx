@@ -10,7 +10,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   const handleLoginPage = () => {
-    navigate("/login");
+    navigate("login");
   };
 
   const handleMainPage = () => {
@@ -19,7 +19,7 @@ export default function Header() {
 
   const handleLogout = () => {
     dispatch(actionClearUser());
-    navigate("/login");
+    navigate("login");
   };
 
   console.log("Header user", user);

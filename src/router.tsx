@@ -1,11 +1,8 @@
-import path from "path";
 import Login from "./pages/login/Login";
 import Home from "./screens/Home";
-import { create } from "domain";
 import { createBrowserRouter } from "react-router-dom";
 import Main from "./pages/main/Main";
 import { ProductDetail } from "./pages/productDetail/productDetail";
-import { useProductContext } from "./context/productContext/productContext";
 
 export const router = createBrowserRouter([
   {
@@ -25,5 +22,5 @@ export const router = createBrowserRouter([
         element: <ProductDetail />,
       }
     ],
-  },
+  }
 ]);

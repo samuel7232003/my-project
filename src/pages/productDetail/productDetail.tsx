@@ -1,10 +1,8 @@
-import React, { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import css from "./productDetail.module.css";
 import { Button } from "antd";
 import { useParams } from "react-router";
-import { getProductById } from "../../context/productContext/productAction";
 import { useAppSelector, useAppDispatch } from "../../redux/builder";
-import useApp from "antd/es/app/useApp";
 import { actionGetProductById } from "../../redux/product/product.action";
 
 export function ProductDetail() {
